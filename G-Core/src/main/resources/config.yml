@@ -1,0 +1,11 @@
+# POSITIONS
+spawnPosition:
+  x: 0.0
+  y: 60.0
+  z: 0.0
+  yaw: 0.0
+  pitch: 0.0
+
+# MESSAGES
+welcomeMessageStart: "Great to see you: "
+welcomeMessageEnd: " have fun!"

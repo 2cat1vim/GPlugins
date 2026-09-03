@@ -1,0 +1,10 @@
+name: G-Core
+version: '${version}'
+
+main: fr.great.gCore.GCore
+api-version: '26.2'
+load: POSTWORLD
+
+commands:
+  spawn:
+    description: Spawn related commands
