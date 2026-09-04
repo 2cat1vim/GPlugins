@@ -1,7 +1,6 @@
-package fr.great.gCore.utils.Definitions;
+package fr.great.gCore.Utils.Definitions;
 
-import fr.great.gCore.cmds.Spawn;
-import fr.great.gCore.utils.Functions.WorldFtn;
+import fr.great.gCore.Utils.Functions.Global.WorldFtn;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 

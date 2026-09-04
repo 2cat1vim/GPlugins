@@ -1,18 +1,39 @@
-package fr.great.gCore.events;
-import fr.great.gCore.utils.Definitions.WorldDef;
-import fr.great.gCore.utils.Functions.Delay;
+package fr.great.gCore.Events;
+import fr.great.gCore.Database.Manager;
+import fr.great.gCore.Utils.Definitions.WorldDef;
+import fr.great.gCore.Utils.Functions.Global.Delay;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import fr.great.gCore.utils.Definitions.BasicDef;
-import fr.great.gCore.utils.Functions.Error;
+import fr.great.gCore.Utils.Definitions.BasicDef;
+import fr.great.gCore.Utils.Functions.Global.Error;
+
+import java.sql.SQLException;
 
 public class Join implements Listener {
+    private final Manager manager;
+
+    public Join(Manager manager) {
+        this.manager = manager;
+    }
+
+    public void addPlayerToSQL(Player p) {
+        Bukkit.getScheduler().runTaskAsynchronously(BasicDef.PLUGIN, () -> {
+            try {
+                manager.addPlayer(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void spawnPlayer(Player p) {
+        p.setGameMode(GameMode.ADVENTURE);
         p.teleport(WorldDef.LOCATION);
         Delay.Set(() ->
                 p.playSound(p.getLocation(), Sound.ITEM_GOAT_HORN_SOUND_0, 1.0f, 1.5f)
@@ -33,6 +54,7 @@ public class Join implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.joinMessage(null);
         Player p = e.getPlayer();
+        addPlayerToSQL(p);
         spawnPlayer(p);
     }
 }

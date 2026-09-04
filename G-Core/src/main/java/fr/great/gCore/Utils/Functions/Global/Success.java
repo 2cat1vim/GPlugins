@@ -1,7 +1,6 @@
-package fr.great.gCore.utils.Functions;
+package fr.great.gCore.Utils.Functions.Global;
 
-import fr.great.gCore.utils.Definitions.BasicDef;
-import org.bukkit.Bukkit;
+import fr.great.gCore.Utils.Definitions.BasicDef;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

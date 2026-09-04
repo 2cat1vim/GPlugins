@@ -1,7 +1,7 @@
-package fr.great.gCore.utils.Functions;
+package fr.great.gCore.Utils.Functions.Global;
 
-import fr.great.gCore.utils.Definitions.BasicDef;
-import fr.great.gCore.utils.Definitions.WorldDef;
+import fr.great.gCore.Utils.Definitions.BasicDef;
+import fr.great.gCore.Utils.Definitions.WorldDef;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 

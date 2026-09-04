@@ -1,16 +1,16 @@
-package fr.great.gCore.cmds;
+package fr.great.gCore.Commands;
 
-import fr.great.gCore.utils.Definitions.BasicDef;
-import fr.great.gCore.utils.Definitions.WorldDef;
-import fr.great.gCore.utils.Functions.Success;
-import fr.great.gCore.utils.Functions.WorldFtn;
+import fr.great.gCore.Utils.Definitions.BasicDef;
+import fr.great.gCore.Utils.Definitions.WorldDef;
+import fr.great.gCore.Utils.Functions.Global.Success;
+import fr.great.gCore.Utils.Functions.Global.WorldFtn;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import fr.great.gCore.utils.Functions.Error;
+import fr.great.gCore.Utils.Functions.Global.Error;
 
 public class Spawn implements CommandExecutor {
 

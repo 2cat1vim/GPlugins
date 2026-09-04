@@ -9,3 +9,9 @@ spawnPosition:
 # MESSAGES
 welcomeMessageStart: "Great to see you: "
 welcomeMessageEnd: " have fun!"
+
+# CHAT FILTER
+messageFilter:
+  - "fuck"
+  - "bitch"
+  - "puta"

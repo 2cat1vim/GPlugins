@@ -1,9 +1,7 @@
-package fr.great.gCore.utils.Functions;
+package fr.great.gCore.Utils.Functions.Global;
 
-import fr.great.gCore.utils.Definitions.BasicDef;
+import fr.great.gCore.Utils.Definitions.BasicDef;
 import org.bukkit.Bukkit;
-
-import java.util.function.Function;
 
 public class Delay {
     public static void Set(Runnable f, long delay) {
