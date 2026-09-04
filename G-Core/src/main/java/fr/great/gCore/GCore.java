@@ -1,5 +1,7 @@
 package fr.great.gCore;
 
+import fr.great.gCore.Commands.Role;
+import fr.great.gCore.Commands.TabComplete.TRole;
 import fr.great.gCore.Database.Manager;
 import fr.great.gCore.Commands.Spawn;
 import fr.great.gCore.Commands.TabComplete.TSpawn;
@@ -26,6 +28,7 @@ public final class GCore extends JavaPlugin {
         }
     }
     private Manager manager;
+    private fr.great.gCore.Database.Role role;
     @Override
     public void onEnable() {
         try {
@@ -35,15 +38,18 @@ public final class GCore extends JavaPlugin {
             manager = new Manager(
                     getDataFolder().getAbsolutePath() + "/database.db"
             );
+            role = new fr.great.gCore.Database.Role(manager);
         } catch (SQLException e) {
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
         }
         this.saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new Join(manager), this);
-        getServer().getPluginManager().registerEvents(new Chat(), this);
+        getServer().getPluginManager().registerEvents(new Chat(role), this);
         this.getCommand("spawn").setExecutor(new Spawn());
         this.getCommand("spawn").setTabCompleter(new TSpawn());
+        this.getCommand("role").setExecutor(new Role(role));
+        this.getCommand("role").setTabCompleter(new TRole(role));
         setEnvironmentSettings();
     }
 

@@ -5,15 +5,21 @@ import org.bukkit.entity.Player;
 import java.sql.*;
 
 public class Manager {
-    private Connection connection = null;
+    public static Connection connection = null;
+    /* Constructor */
     public Manager(String path) throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS players (" +
                     "uuid TEXT PRIMARY KEY, " +
-                    "rank INT NOT NULL DEFAULT 0");
+                    "role INT NOT NULL DEFAULT 0)");
         }
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
     public void closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();

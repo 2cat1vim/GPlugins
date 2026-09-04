@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +28,7 @@ public class Join implements Listener {
             try {
                 manager.addPlayer(p);
             } catch (SQLException e) {
-                e.printStackTrace();
+                p.sendMessage("SQL Error, contact staff -> Log[addPlayerToSQL]");
             }
         });
     }
@@ -35,6 +36,8 @@ public class Join implements Listener {
     public void spawnPlayer(Player p) {
         p.setGameMode(GameMode.ADVENTURE);
         p.teleport(WorldDef.LOCATION);
+        p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
+        p.setFoodLevel((int)p.getAttribute(Attribute.MAX_HEALTH).getValue());
         Delay.Set(() ->
                 p.playSound(p.getLocation(), Sound.ITEM_GOAT_HORN_SOUND_0, 1.0f, 1.5f)
         ,20L);

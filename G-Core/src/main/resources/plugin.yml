@@ -7,4 +7,6 @@ load: POSTWORLD
 
 commands:
   spawn:
-    description: Spawn related commands
+    description: Spawn related command
+  role:
+    description: Role related command

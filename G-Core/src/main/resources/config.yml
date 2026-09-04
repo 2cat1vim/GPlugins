@@ -15,3 +15,13 @@ messageFilter:
   - "fuck"
   - "bitch"
   - "puta"
+
+# ROLES
+playerRoles:
+  - "New"
+  - "Player"
+  - "Vip"
+  - "Helper"
+  - "Moderator"
+  - "Admin"
+  - "Owner"

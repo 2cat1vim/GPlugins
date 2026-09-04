@@ -51,7 +51,6 @@ public class Spawn implements CommandExecutor {
             default:
                 Error.sendError("Usage: /spawn <null> : <set> : <get>", p);
         }
-        sdr.sendMessage(args);
         return true;
     }
 }
