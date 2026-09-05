@@ -1,4 +1,4 @@
-package fr.great.gCore.Commands;
+package fr.great.gCore.commands;
 
 import fr.great.gCore.Utils.Definitions.BasicDef;
 import fr.great.gCore.Utils.Definitions.WorldDef;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import fr.great.gCore.Utils.Functions.Global.Error;
 
-public class Spawn implements CommandExecutor {
+public class CmdSpawn implements CommandExecutor {
 
     public String getLocAsString(Location loc) {
         return (loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + ", " + loc.getYaw() + ", " + loc.getPitch());

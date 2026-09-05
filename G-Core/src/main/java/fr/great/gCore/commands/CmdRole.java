@@ -1,10 +1,9 @@
-package fr.great.gCore.Commands;
+package fr.great.gCore.commands;
 
+import fr.great.gCore.database.DataRole;
 import fr.great.gCore.Utils.Definitions.BasicDef;
-import fr.great.gCore.Utils.Definitions.WorldDef;
 import fr.great.gCore.Utils.Functions.Global.Error;
 import fr.great.gCore.Utils.Functions.Global.Success;
-import fr.great.gCore.Utils.Functions.Global.WorldFtn;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,11 +12,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 
-public class Role implements CommandExecutor {
-    private final fr.great.gCore.Database.Role role;
-    public Role(fr.great.gCore.Database.Role role) {
+public class CmdRole implements CommandExecutor {
+    private final DataRole role;
+    public CmdRole(DataRole role) {
         this.role = role;
     }
 

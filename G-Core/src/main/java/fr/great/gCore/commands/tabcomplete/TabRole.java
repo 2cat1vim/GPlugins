@@ -1,6 +1,6 @@
-package fr.great.gCore.Commands.TabComplete;
+package fr.great.gCore.commands.tabcomplete;
 
-import fr.great.gCore.Database.Role;
+import fr.great.gCore.database.DataRole;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TRole implements TabCompleter {
+public class TabRole implements TabCompleter {
 
-    private Role role;
-    public TRole(Role role) {
+    private DataRole role;
+    public TabRole(DataRole role) {
         this.role = role;
     }
 

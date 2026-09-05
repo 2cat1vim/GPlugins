@@ -1,6 +1,6 @@
-package fr.great.gCore.Events;
-import fr.great.gCore.Database.Manager;
-import fr.great.gCore.Database.Role;
+package fr.great.gCore.events;
+import fr.great.gCore.database.DataManager;
+import fr.great.gCore.database.DataRole;
 import fr.great.gCore.Utils.Definitions.WorldDef;
 import fr.great.gCore.Utils.Functions.Global.Delay;
 import org.bukkit.Bukkit;
@@ -13,17 +13,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import fr.great.gCore.Utils.Definitions.BasicDef;
-import fr.great.gCore.Utils.Functions.Global.Error;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.SQLException;
 
-public class Join implements Listener {
-    private final Manager manager;
-    private final Role role;
+public class EventLog implements Listener {
+    private final DataManager manager;
+    private final DataRole role;
 
-    public Join(Manager manager, Role role) {
+    public EventLog(DataManager manager, DataRole role) {
         this.manager = manager;
         this.role = role;
     }
@@ -48,16 +46,8 @@ public class Join implements Listener {
         Delay.Set(() ->
                 p.playSound(p.getLocation(), Sound.ITEM_GOAT_HORN_SOUND_0, 1.0f, 1.5f)
         ,20L);
-        if (BasicDef.WSTART == null) {
-            Error.sendError("welcomeMessageStart is empty in config", p);
-            return ;
-        }
-        if (BasicDef.WEND == null) {
-            Error.sendError("welcomeMessageEnd is empty in config", p);
-            return ;
-        }
-        String welcome = BasicDef.PREFIX + ChatColor.GREEN + BasicDef.WSTART + p.getName() + BasicDef.WEND;
-        Bukkit.getServer().sendPlainMessage(welcome);
+
+        Bukkit.getServer().sendPlainMessage(BasicDef.MSGWELCOME.replace("<player>", p.getName()));
     }
 
     @EventHandler
@@ -66,5 +56,10 @@ public class Join implements Listener {
         Player p = e.getPlayer();
         addPlayerToSQL(p);
         spawnPlayer(p);
+    }
+
+    @EventHandler
+    public void OnPlayerQuit(PlayerQuitEvent e) {
+        e.quitMessage(null);
     }
 }

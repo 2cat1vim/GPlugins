@@ -7,8 +7,18 @@ spawnPosition:
   pitch: 0.0
 
 # MESSAGES
-welcomeMessageStart: "Great to see you: "
-welcomeMessageEnd: " have fun!"
+prefixMessage: "§7[§bGCore§7]: §f"
+  # SPECIAL START: <player>
+welcomeMessage: "§aGreat to see you §7<player> §ahave fun!"
+  # SPECIAL END
+deathTitleMessage: "§cYou died"
+deathSubTitleMessage: "§7be careful next time"
+
+# MODERATION MESSAGES
+  # SPECIAL START: <player> & <reason>
+broadcastKickMessage: "§7<player> §chave been kicked for <reason>"
+  # SPECIAL END
+kickMessage: "§cYou have been kicked"
 
 # CHAT FILTER
 messageFilter:

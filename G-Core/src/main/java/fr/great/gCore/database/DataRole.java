@@ -1,8 +1,7 @@
-package fr.great.gCore.Database;
+package fr.great.gCore.database;
 
 import fr.great.gCore.Utils.Definitions.BasicDef;
 import fr.great.gCore.Utils.Functions.Global.Error;
-import fr.great.gCore.Utils.Functions.Global.Success;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,9 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Role {
-    private final Manager manager;
-    public Role(Manager manager) {
+public class DataRole {
+    private final DataManager manager;
+    public DataRole(DataManager manager) {
         this.manager = manager;
     }
 

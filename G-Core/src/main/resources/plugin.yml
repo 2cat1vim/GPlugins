@@ -10,3 +10,5 @@ commands:
     description: Spawn related command
   role:
     description: Role related command
+  gkick:
+    description: Kick related command

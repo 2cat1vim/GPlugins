@@ -1,7 +1,6 @@
-package fr.great.gCore.Events;
+package fr.great.gCore.events;
 
-import fr.great.gCore.Database.Manager;
-import fr.great.gCore.Database.Role;
+import fr.great.gCore.database.DataRole;
 import fr.great.gCore.Utils.Definitions.BasicDef;
 import fr.great.gCore.Utils.Functions.Global.Error;
 import org.bukkit.Bukkit;
@@ -14,10 +13,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Chat implements Listener {
-    private final Role role;
+public class EventChat implements Listener {
+    private final DataRole role;
 
-    public Chat(Role role) {
+    public EventChat(DataRole role) {
         this.role = role;
     }
 

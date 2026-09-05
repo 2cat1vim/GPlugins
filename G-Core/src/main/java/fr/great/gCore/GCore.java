@@ -1,22 +1,71 @@
 package fr.great.gCore;
 
-import fr.great.gCore.Commands.Role;
-import fr.great.gCore.Commands.TabComplete.TRole;
-import fr.great.gCore.Database.Manager;
-import fr.great.gCore.Commands.Spawn;
-import fr.great.gCore.Commands.TabComplete.TSpawn;
-import fr.great.gCore.Events.Chat;
-import fr.great.gCore.Events.Join;
-import fr.great.gCore.Events.PlayerState;
+import fr.great.gCore.Utils.Functions.Global.Error;
+import fr.great.gCore.Utils.Functions.Global.Success;
+import fr.great.gCore.commands.CmdKick;
+import fr.great.gCore.commands.CmdRole;
+import fr.great.gCore.commands.tabcomplete.TabKick;
+import fr.great.gCore.commands.tabcomplete.TabRole;
+import fr.great.gCore.config.ConfigManager;
+import fr.great.gCore.database.DataManager;
+import fr.great.gCore.commands.CmdSpawn;
+import fr.great.gCore.commands.tabcomplete.TabSpawn;
+import fr.great.gCore.database.DataRole;
+import fr.great.gCore.events.EventChat;
+import fr.great.gCore.events.EventDeath;
+import fr.great.gCore.events.EventLog;
+import fr.great.gCore.events.EventState;
 import fr.great.gCore.Utils.Definitions.WorldDef;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 
+import static fr.great.gCore.Utils.Functions.Global.Success.sendSuccessServer;
+import static org.bukkit.GameRules.*;
+
 public final class GCore extends JavaPlugin {
 
-    public void setEnvironmentSettings() {
+    private DataManager dataManager;
+    private DataRole dataRole;
+    private ConfigManager configManager;
+
+    /* Main on */
+    @Override
+    public void onEnable() {
+        this.createDatabaseOrDefault();
+        configManager = new ConfigManager(this);
+        this.regEvents();
+        this.regCommands();
+        setEnvironmentSettings();
+        Success.sendSuccessServer("GCore is started", this);
+    }
+
+    /* Main off */
+    @Override
+    public void onDisable() {
+        closeDatabase();
+        Success.sendSuccessServer("GCore is disabled", this);
+    }
+
+    /* Rest is helper for main on & off */
+    private void regEvents() {
+        getServer().getPluginManager().registerEvents(new EventLog(dataManager, dataRole), this);
+        getServer().getPluginManager().registerEvents(new EventChat(dataRole), this);
+        getServer().getPluginManager().registerEvents(new EventState(), this);
+        getServer().getPluginManager().registerEvents(new EventDeath(), this);
+    }
+
+    private void regCommands() {
+        this.getCommand("spawn").setExecutor(new CmdSpawn());
+        this.getCommand("spawn").setTabCompleter(new TabSpawn());
+        this.getCommand("role").setExecutor(new CmdRole(dataRole));
+        this.getCommand("role").setTabCompleter(new TabRole(dataRole));
+        this.getCommand("gkick").setExecutor(new CmdKick());
+        this.getCommand("gkick").setTabCompleter(new TabKick());
+    }
+
+    private void setEnvironmentSettings() {
         World world = WorldDef.WORLD;
         System.out.println(world.toString());
         world.setDifficulty(Difficulty.HARD);
@@ -27,44 +76,32 @@ public final class GCore extends JavaPlugin {
                 world.setGameRule(boolRule, false);
             }
         }
+        world.setGameRule(IMMEDIATE_RESPAWN, true);
     }
-    private Manager manager;
-    private fr.great.gCore.Database.Role role;
-    @Override
-    public void onEnable() {
+
+    private void createDatabaseOrDefault() {
         try {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
             }
-            manager = new Manager(
+            dataManager = new DataManager(
                     getDataFolder().getAbsolutePath() + "/database.db"
             );
-            role = new fr.great.gCore.Database.Role(manager);
+            dataRole = new DataRole(dataManager);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Error.sendErrorServer("Failed to create or load database", this);
             Bukkit.getPluginManager().disablePlugin(this);
         }
-        this.saveDefaultConfig();
-        getServer().getPluginManager().registerEvents(new Join(manager, role), this);
-        getServer().getPluginManager().registerEvents(new Chat(role), this);
-        getServer().getPluginManager().registerEvents(new PlayerState(), this);
-        this.getCommand("spawn").setExecutor(new Spawn());
-        this.getCommand("spawn").setTabCompleter(new TSpawn());
-        this.getCommand("role").setExecutor(new Role(role));
-        this.getCommand("role").setTabCompleter(new TRole(role));
-        setEnvironmentSettings();
     }
 
-    @Override
-    public void onDisable() {
+    private void closeDatabase() {
         try {
-            if (manager != null) {
-                manager.closeConnection();
+            if (dataManager != null) {
+                dataManager.closeConnection();
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            Error.sendErrorServer("Failed to close database", this);
         }
-        // Plugin shutdown logic
     }
 }

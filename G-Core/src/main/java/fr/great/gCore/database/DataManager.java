@@ -1,13 +1,13 @@
-package fr.great.gCore.Database;
+package fr.great.gCore.database;
 
 import org.bukkit.entity.Player;
 
 import java.sql.*;
 
-public class Manager {
+public class DataManager {
     public static Connection connection = null;
     /* Constructor */
-    public Manager(String path) throws SQLException {
+    public DataManager(String path) throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS players (" +
