@@ -27,6 +27,7 @@ public class TRole implements TabCompleter {
             List<String> list = new ArrayList<>();
             list.add("set");
             list.add("get");
+            list.add("list");
             return StringUtil.copyPartialMatches(args[0].toLowerCase(), list, new ArrayList<>());
         }
         if (args.length == 2

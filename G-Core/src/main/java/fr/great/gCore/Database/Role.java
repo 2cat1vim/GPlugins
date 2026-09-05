@@ -1,7 +1,13 @@
 package fr.great.gCore.Database;
 
 import fr.great.gCore.Utils.Definitions.BasicDef;
+import fr.great.gCore.Utils.Functions.Global.Error;
+import fr.great.gCore.Utils.Functions.Global.Success;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +20,7 @@ public class Role {
         this.manager = manager;
     }
 
-    public List<String> Roles = BasicDef.CONFIG.getStringList("playerRoles");
+    public List<String> Roles = BasicDef.ROLES;
 
     public List<String> getRoles() {
         return Roles;
@@ -31,6 +37,53 @@ public class Role {
             }
         }
         return 0;
+    }
+    public void setNameTagColor(Player p, ChatColor color) {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        Team team = scoreboard.getTeam(color.name());
+        Team oldTeam = scoreboard.getEntryTeam(p.getName());
+        if (oldTeam != null) {
+            oldTeam.removeEntry(p.getName());
+        }
+        if (team == null) {
+            team = scoreboard.registerNewTeam(color.name());
+            team.setColor(color);
+        }
+        team.addEntry(p.getName());
+    }
+
+    public ChatColor getNameTagColor(Player p) {
+        ChatColor color = ChatColor.GRAY;
+        int n_role = 0;
+        try {
+            n_role = getRole(p);
+        } catch (SQLException e) {
+            Error.sendError("SQL Error, contact staff -> Log[getNameTagColor]", p);
+        }
+        switch (n_role) {
+            case 1:
+                color = ChatColor.AQUA;
+                break;
+            case 2:
+                color = ChatColor.YELLOW;
+                break;
+            case 3:
+                color = ChatColor.GREEN;
+                break;
+            case 4:
+                color = ChatColor.GOLD;
+                break;
+            case 5:
+                color = ChatColor.RED;
+                break;
+            case 6:
+                color = ChatColor.DARK_RED;
+                break;
+            default:
+                color = ChatColor.GRAY;
+                break;
+        }
+        return color;
     }
 
     public void setRole(Player p, int newRole) throws SQLException {

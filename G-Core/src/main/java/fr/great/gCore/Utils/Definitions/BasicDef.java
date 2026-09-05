@@ -15,4 +15,5 @@ public class BasicDef {
     public static final String WSTART = CONFIG.getString("welcomeMessageStart");
     public static final String WEND = CONFIG.getString("welcomeMessageEnd");
     public static final List<String> MSGFILTER = CONFIG.getStringList("messageFilter");
+    public static final List<String> ROLES = CONFIG.getStringList("playerRoles");
 }

@@ -36,7 +36,7 @@ public class Chat implements Listener {
         int n_role = role.getRole(p);
         switch (n_role) {
             case 1: color = ChatColor.AQUA; break;
-            case 2: color = ChatColor.LIGHT_PURPLE; break;
+            case 2: color = ChatColor.YELLOW; break;
             case 3: color = ChatColor.GREEN; break;
             case 4: color = ChatColor.GOLD; break;
             case 5: color = ChatColor.RED; break;

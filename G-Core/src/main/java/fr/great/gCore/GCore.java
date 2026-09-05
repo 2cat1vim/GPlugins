@@ -7,6 +7,7 @@ import fr.great.gCore.Commands.Spawn;
 import fr.great.gCore.Commands.TabComplete.TSpawn;
 import fr.great.gCore.Events.Chat;
 import fr.great.gCore.Events.Join;
+import fr.great.gCore.Events.PlayerState;
 import fr.great.gCore.Utils.Definitions.WorldDef;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,8 +45,9 @@ public final class GCore extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         }
         this.saveDefaultConfig();
-        getServer().getPluginManager().registerEvents(new Join(manager), this);
+        getServer().getPluginManager().registerEvents(new Join(manager, role), this);
         getServer().getPluginManager().registerEvents(new Chat(role), this);
+        getServer().getPluginManager().registerEvents(new PlayerState(), this);
         this.getCommand("spawn").setExecutor(new Spawn());
         this.getCommand("spawn").setTabCompleter(new TSpawn());
         this.getCommand("role").setExecutor(new Role(role));

@@ -13,12 +13,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class Role implements CommandExecutor {
     private final fr.great.gCore.Database.Role role;
     public Role(fr.great.gCore.Database.Role role) {
         this.role = role;
     }
+
+    private final String usage = "Usage:\n* /role list\n* /role set <player> <role>\n* /role get <player>";
 
     public int getRoleAsync(Player p, Player t) {
         final int[] r = {0};
@@ -32,10 +35,11 @@ public class Role implements CommandExecutor {
         return r[0];
     }
 
-    public void setRoleAsync(Player p, Player t, int r) {
+    public void updateRoleAsync(Player p, Player t, int r) {
         Bukkit.getScheduler().runTaskAsynchronously(BasicDef.PLUGIN, () -> {
             try {
                 role.setRole(t, r);
+                role.setNameTagColor(t, role.getNameTagColor(t));
             } catch (SQLException e) {
                 Error.sendError("SQL Error", p);
             }
@@ -48,14 +52,19 @@ public class Role implements CommandExecutor {
             fr.great.gCore.Utils.Functions.Global.Error.sendErrorServer("This command require to be a player");
             return true;
         }
+        Player p = (Player)sdr;
         if (args.length == 0) {
-            Error.sendError("Usage:\n* /role list\n* /role <set> <player> <role>\n* /role <get> <player>", ((Player) sdr).getPlayer());
+            Error.sendError(usage, p);
             return true;
         }
-        Player p = (Player)sdr;
+        if (args.length == 1 && args[0].equals("list")) {
+            Success.sendSuccess(String.join(" : ", BasicDef.ROLES), p);
+            return true;
+        }
         Player t = Bukkit.getPlayer(args[1]);
         if (t == null) {
             Error.sendError(args[1] + " is offline", p);
+            return true;
         }
         switch (args.length) {
             case 2:
@@ -66,8 +75,11 @@ public class Role implements CommandExecutor {
                     }
                     int r = getRoleAsync(p, t);
                     Success.sendSuccess(p.getName() + " have role: " + role.getRoleByValue(r), p);
-                    break;
                 }
+                else {
+                    Error.sendError(usage, p);
+                }
+                break;
             case 3:
                 if (args[0].equals("set")) {
                     if (!p.hasPermission("gcore.role.set")) {
@@ -75,12 +87,15 @@ public class Role implements CommandExecutor {
                         break;
                     }
                     int r = role.getValueByRole(args[2]);
-                    setRoleAsync(p, t, r);
+                    updateRoleAsync(p, t, r);
                     Success.sendSuccess(t.getName() + " role is set to: " + role.getRoleByValue(r), p);
-                    break ;
                 }
+                else {
+                    Error.sendError(usage, p);
+                }
+                break;
             default:
-                Error.sendError("Usage:\n* /role list\n* /role <set> <player> <role>\n* /role <get> <player>", p);
+                Error.sendError(usage, p);
                 break;
         }
         return true;

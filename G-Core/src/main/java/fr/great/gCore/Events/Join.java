@@ -1,5 +1,6 @@
 package fr.great.gCore.Events;
 import fr.great.gCore.Database.Manager;
+import fr.great.gCore.Database.Role;
 import fr.great.gCore.Utils.Definitions.WorldDef;
 import fr.great.gCore.Utils.Functions.Global.Delay;
 import org.bukkit.Bukkit;
@@ -13,20 +14,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import fr.great.gCore.Utils.Definitions.BasicDef;
 import fr.great.gCore.Utils.Functions.Global.Error;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.SQLException;
 
 public class Join implements Listener {
     private final Manager manager;
+    private final Role role;
 
-    public Join(Manager manager) {
+    public Join(Manager manager, Role role) {
         this.manager = manager;
+        this.role = role;
     }
 
     public void addPlayerToSQL(Player p) {
         Bukkit.getScheduler().runTaskAsynchronously(BasicDef.PLUGIN, () -> {
             try {
                 manager.addPlayer(p);
+                ChatColor color = role.getNameTagColor(p);
+                role.setNameTagColor(p, color);
             } catch (SQLException e) {
                 p.sendMessage("SQL Error, contact staff -> Log[addPlayerToSQL]");
             }
