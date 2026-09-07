@@ -43,9 +43,10 @@ public class EventChat implements Listener {
             default: color = ChatColor.GRAY; break;
         }
         String chatFormat = cm.getGeneralChatFormat();
+        chatFormat = chatFormat.replace("<rank>", dr.getRoleByValue(n_role));
         chatFormat = chatFormat.replace("<player>", p.getName());
         chatFormat = chatFormat.replace("<rank_color>", color.toString());
-        Bukkit.getServer().sendPlainMessage(chatFormat);
+        Bukkit.getServer().sendPlainMessage(chatFormat + msg);
     }
 
     @EventHandler

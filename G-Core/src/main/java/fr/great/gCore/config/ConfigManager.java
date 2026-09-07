@@ -19,6 +19,7 @@ public class ConfigManager {
     private String kickMessage;
     private String broadcastKickMessage;
     private String generalChatFormat;
+    private String playerNameTag;
     private List<String> playerRoles;
     private List<String> messageFilter;
 
@@ -71,6 +72,7 @@ public class ConfigManager {
         file.set("spawnPosition.z", loc.getZ());
         file.set("spawnPosition.yaw", loc.getYaw());
         file.set("spawnPosition.pitch", loc.getPitch());
+        file.set("spawnPosition.world", loc.getWorld());
         plugin.saveConfig();
     }
 
@@ -81,7 +83,8 @@ public class ConfigManager {
         deathSubTitle = getStringOrDefault(file, "deathSubTitleMessage", "§7be careful next time");
         kickMessage = getStringOrDefault(file, "kickMessage", "§cYou have been kicked");
         broadcastKickMessage = getStringOrDefault(file, "broadcastKickMessage", "§7<player> §chave been kicked for <reason>");
-        generalChatFormat = getStringOrDefault(file, "generalChatFormat", "<rank_color><player>§7: §f");
+        generalChatFormat = getStringOrDefault(file, "generalChatFormat", "§f[<rank_color><rank>§f] <rank_color><player>§f: §f");
+        playerNameTag = getStringOrDefault(file, "playerNameTag", "§f[<rank_color><rank>§f] <rank_color>");
         playerRoles = getStringListOrDefault(file, "playerRoles", List.of("New", "Player", "Vip", "Helper", "Moderator", "Admin", "Owner"));
         messageFilter = getStringListOrDefault(file, "messageFilter", List.of("fuck", "bitch", "puta"));
 
@@ -96,6 +99,7 @@ public class ConfigManager {
     public String getKickMessage() { return kickMessage; }
     public String getBroadcastKickMessage() { return broadcastKickMessage; }
     public String getGeneralChatFormat() { return generalChatFormat; }
+    public String getPlayerNameTag() { return playerNameTag; }
     public List<String> getPlayerRoles() { return playerRoles; }
     public List<String> getMessageFilter() { return messageFilter; }
 

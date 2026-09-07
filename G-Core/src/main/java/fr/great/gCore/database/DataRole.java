@@ -12,8 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
-import static fr.great.gCore.utils.Logger.sendError;
+import java.util.Set;
 
 public class DataRole {
     private final DataManager dm = Context.getInstance().getDataManager();
@@ -37,28 +36,34 @@ public class DataRole {
         }
         return 0;
     }
-    public void setNameTagColor(Player p, ChatColor color) {
+
+    public void clearTeams() {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        Team team = scoreboard.getTeam(color.name());
+        for (Team team : scoreboard.getTeams()) {
+            team.unregister();
+        }
+    }
+
+    public void setNameTagColor(Player p, ChatColor color, int n_role) {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        Team team = scoreboard.getTeam(String.valueOf(n_role));
         Team oldTeam = scoreboard.getEntryTeam(p.getName());
         if (oldTeam != null) {
             oldTeam.removeEntry(p.getName());
         }
         if (team == null) {
-            team = scoreboard.registerNewTeam(color.name());
+            team = scoreboard.registerNewTeam(String.valueOf(n_role));
+            String format = cm.getPlayerNameTag();
+            format = format.replace("<rank>", getRoleByValue(n_role));
+            format = format.replace("<rank_color>", color.toString());
             team.setColor(color);
+            team.setPrefix(format);
         }
         team.addEntry(p.getName());
     }
 
-    public ChatColor getNameTagColor(Player p) {
+    public ChatColor getNameTagColor(Player p, int n_role) {
         ChatColor color;
-        int n_role = 0;
-        try {
-            n_role = getRole(p);
-        } catch (SQLException e) {
-            sendError("SQL Error, contact staff -> Log[getNameTagColor]", p);
-        }
         switch (n_role) {
             case 1:
                 color = ChatColor.AQUA;

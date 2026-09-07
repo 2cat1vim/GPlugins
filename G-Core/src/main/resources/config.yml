@@ -6,7 +6,6 @@ spawnPosition:
   z: 0.0
   yaw: 0.0
   pitch: 0.0
-
 # MESSAGES
 prefixMessage: "§7[§bGCore§7]: §f"
   # SPECIAL START: <player>
@@ -14,19 +13,16 @@ welcomeMessage: "§aGreat to see you §7<player> §ahave fun!"
   # SPECIAL END
 deathTitleMessage: "§cYou died"
 deathSubTitleMessage: "§7be careful next time"
-
 # MODERATION MESSAGES
   # SPECIAL START: <player> & <reason>
 broadcastKickMessage: "§7<player> §chave been kicked for <reason>"
   # SPECIAL END
 kickMessage: "§cYou have been kicked"
-
 # CHAT FILTER
 messageFilter:
   - "fuck"
   - "bitch"
   - "puta"
-
 # ROLES
 playerRoles:
   - "New"
@@ -36,6 +32,9 @@ playerRoles:
   - "Moderator"
   - "Admin"
   - "Owner"
-  # SPECIAL START: <player> & <rank_color>
-generalChatFormat: "<rank_color><player>§7: §f"
+  # SPECIAL START: <player> & <rank> & <rank_color>
+playerNameTag: "§f[<rank_color><rank>§f] <rank_color>"
+  # SPECIAL END
+  # SPECIAL START: <player> & <rank> & <rank_color> ([!] rank color can only be set one time)
+generalChatFormat: "§f[<rank_color><rank>§f] <player>§f: §f"
   # SPECIAL END

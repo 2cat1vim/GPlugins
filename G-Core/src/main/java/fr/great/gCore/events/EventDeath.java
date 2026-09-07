@@ -1,7 +1,6 @@
 package fr.great.gCore.events;
 
 import fr.great.gCore.di.Context;
-import fr.great.gCore.utils.Definitions.WorldDef;
 import fr.great.gCore.utils.Delay;
 import fr.great.gCore.config.ConfigManager;
 import org.bukkit.Sound;

@@ -18,23 +18,11 @@ public class CmdRole implements CommandExecutor {
     private final DataRole dr = Context.getInstance().getDataRole();
     private final ConfigManager cm = Context.getInstance().getConfigManager();
 
-    public int getRoleAsync(Player p, Player t) {
-        final int[] r = {0};
-        Bukkit.getScheduler().runTaskAsynchronously(cm.getPlugin(), () -> {
-            try {
-                r[0] = dr.getRole(t);
-            } catch (SQLException e) {
-                sendError("SQL Error", p);
-            }
-        });
-        return r[0];
-    }
-
     public void updateRoleAsync(Player p, Player t, int r) {
         Bukkit.getScheduler().runTaskAsynchronously(cm.getPlugin(), () -> {
             try {
                 dr.setRole(t, r);
-                dr.setNameTagColor(t, dr.getNameTagColor(t));
+                dr.setNameTagColor(t, dr.getNameTagColor(t, r), r);
             } catch (SQLException e) {
                 sendError("SQL Error", p);
             }
@@ -69,7 +57,12 @@ public class CmdRole implements CommandExecutor {
                         sendError("You do not have the permission", p);
                         break;
                     }
-                    int r = getRoleAsync(p, t);
+                    int r = 0;
+                    try {
+                        r = dr.getRole(t);
+                    } catch (SQLException e) {
+                        sendError("SQL Error", p);
+                    }
                     sendSuccess(p.getName() + " have role: " + dr.getRoleByValue(r), p);
                 }
                 else {

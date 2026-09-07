@@ -16,8 +16,12 @@ import fr.great.gCore.events.EventLog;
 import fr.great.gCore.events.EventState;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
 
 import static fr.great.gCore.utils.Logger.*;
 import static org.bukkit.GameRules.*;
@@ -30,17 +34,19 @@ public final class GCore extends JavaPlugin {
     /* Main on */
     @Override
     public void onEnable() {
-        this.createDatabaseOrDefault();
+        if (!this.createDatabaseOrDefault()) {
+            return;
+        }
         this.regEvents();
         this.regCommands();
         setEnvironmentSettings();
-        Context.getInstance().createContext(dataManager, dataRole, configManager);
         sendSuccessServer("GCore is started", this);
     }
 
     /* Main off */
     @Override
     public void onDisable() {
+        dataRole.clearTeams();
         closeDatabase();
         sendSuccessServer("GCore is disabled", this);
     }
@@ -74,9 +80,12 @@ public final class GCore extends JavaPlugin {
             }
         }
         world.setGameRule(IMMEDIATE_RESPAWN, true);
+        world.setGameRule(PVP, true);
     }
 
-    private void createDatabaseOrDefault() {
+    private boolean createDatabaseOrDefault() {
+        configManager = new ConfigManager(this);
+        Context.getInstance().createConfigManager(configManager);
         try {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
@@ -84,12 +93,15 @@ public final class GCore extends JavaPlugin {
             dataManager = new DataManager(
                     getDataFolder().getAbsolutePath() + "/database.db"
             );
+            Context.getInstance().createDataManager(dataManager);
             dataRole = new DataRole();
+            Context.getInstance().createDataRole(dataRole);
+            return true;
         } catch (SQLException e) {
             sendErrorServer("Failed to create or load database", this);
             Bukkit.getPluginManager().disablePlugin(this);
+            return false;
         }
-        configManager = new ConfigManager(this);
     }
 
     private void closeDatabase() {

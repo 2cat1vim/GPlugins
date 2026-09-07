@@ -17,21 +17,24 @@ public class Context {
         return INSTANCE;
     }
 
-    public void createContext(DataManager dataManager,
-                              DataRole dataRole,
-                              ConfigManager configManager) {
+    public void createDataManager(DataManager dataManager) {
         this.dataManager = dataManager;
+    }
+    public void createDataRole(
+                                  DataRole dataRole) {
         this.dataRole = dataRole;
+    }
+    public void createConfigManager(ConfigManager configManager) {
         this.configManager = configManager;
     }
 
     public DataManager getDataManager() {
-        return dataManager;
+        return this.dataManager;
     }
     public DataRole getDataRole() {
-        return dataRole;
+        return this.dataRole;
     }
     public ConfigManager getConfigManager() {
-        return configManager;
+        return this.configManager;
     }
 }

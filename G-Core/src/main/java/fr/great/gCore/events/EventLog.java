@@ -26,8 +26,9 @@ public class EventLog implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(cm.getPlugin(), () -> {
             try {
                 dm.addPlayer(p);
-                ChatColor color = dr.getNameTagColor(p);
-                dr.setNameTagColor(p, color);
+                int r = dr.getRole(p);
+                ChatColor color = dr.getNameTagColor(p, r);
+                dr.setNameTagColor(p, color, dr.getRole(p));
             } catch (SQLException e) {
                 p.sendMessage("SQL Error, contact staff -> Log[addPlayerToSQL]");
             }
