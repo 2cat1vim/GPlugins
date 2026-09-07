@@ -1,7 +1,7 @@
 package fr.great.gCore.database;
 
-import fr.great.gCore.Utils.Definitions.BasicDef;
-import fr.great.gCore.Utils.Functions.Global.Error;
+import fr.great.gCore.config.ConfigManager;
+import fr.great.gCore.di.Context;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,13 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DataRole {
-    private final DataManager manager;
-    public DataRole(DataManager manager) {
-        this.manager = manager;
-    }
+import static fr.great.gCore.utils.Logger.sendError;
 
-    public List<String> Roles = BasicDef.ROLES;
+public class DataRole {
+    private final DataManager dm = Context.getInstance().getDataManager();
+    private final ConfigManager cm = Context.getInstance().getConfigManager();
+
+    public List<String> Roles = cm.getPlayerRoles();
 
     public List<String> getRoles() {
         return Roles;
@@ -52,12 +52,12 @@ public class DataRole {
     }
 
     public ChatColor getNameTagColor(Player p) {
-        ChatColor color = ChatColor.GRAY;
+        ChatColor color;
         int n_role = 0;
         try {
             n_role = getRole(p);
         } catch (SQLException e) {
-            Error.sendError("SQL Error, contact staff -> Log[getNameTagColor]", p);
+            sendError("SQL Error, contact staff -> Log[getNameTagColor]", p);
         }
         switch (n_role) {
             case 1:
@@ -86,7 +86,7 @@ public class DataRole {
     }
 
     public void setRole(Player p, int newRole) throws SQLException {
-        try (PreparedStatement preparedStatement = manager.getConnection().prepareStatement
+        try (PreparedStatement preparedStatement = dm.getConnection().prepareStatement
                 ("UPDATE players SET role = ? WHERE uuid = ?")
         ) {
             preparedStatement.setInt(1, newRole);
@@ -96,7 +96,7 @@ public class DataRole {
     }
 
     public int getRole(Player p) throws SQLException {
-        try (PreparedStatement preparedStatement = manager.getConnection().prepareStatement
+        try (PreparedStatement preparedStatement = dm.getConnection().prepareStatement
                 ("SELECT role FROM players WHERE uuid = ?")
         ) {
             preparedStatement.setString(1, p.getUniqueId().toString());

@@ -1,18 +1,19 @@
 package fr.great.gCore.commands;
 
-import fr.great.gCore.Utils.Definitions.BasicDef;
-import fr.great.gCore.Utils.Definitions.WorldDef;
-import fr.great.gCore.Utils.Functions.Global.Success;
-import fr.great.gCore.Utils.Functions.Global.WorldFtn;
+import fr.great.gCore.config.ConfigManager;
+import fr.great.gCore.di.Context;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import fr.great.gCore.Utils.Functions.Global.Error;
+
+import static fr.great.gCore.utils.Logger.*;
 
 public class CmdSpawn implements CommandExecutor {
+
+    private final ConfigManager cm = Context.getInstance().getConfigManager();
 
     public String getLocAsString(Location loc) {
         return (loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + ", " + loc.getYaw() + ", " + loc.getPitch());
@@ -21,35 +22,34 @@ public class CmdSpawn implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sdr, @NotNull Command cmd, @NotNull String lbl, @NotNull String @NotNull [] args) {
         if (!(sdr instanceof Player)) {
-            Error.sendErrorServer("This command require to be a player");
+            sendErrorServer("This command require to be a player", cm.getPlugin());
             return true;
         }
         Player p = (Player)sdr;
         switch (args.length) {
             case 0:
-                p.teleport(WorldDef.LOCATION);
+                p.teleport(cm.getSpawnLocation());
                 break ;
             case 1:
                 if (args[0].equals("set")) {
                     if (!p.hasPermission("gcore.spawn.set")) {
-                        Error.sendError("You do not have the permission", p);
+                        sendError("You do not have the permission", p);
                         break;
                     }
-                    WorldDef.LOCATION = p.getLocation();
-                    WorldFtn.setLocToConfig(BasicDef.CONFIG, WorldDef.LOCATION);
-                    Success.sendSuccess("Spawn location is now: " + getLocAsString(WorldDef.LOCATION), p);
+                    cm.setSpawnLocation(cm.getPlugin().getConfig(), p.getLocation());
+                    sendSuccess("Spawn location is now: " + getLocAsString(p.getLocation()), p);
                     break ;
                 }
                 if (args[0].equals("get")) {
                     if (!p.hasPermission("gcore.spawn.get")) {
-                        Error.sendError("You do not have the permission", p);
+                        sendError("You do not have the permission", p);
                         break;
                     }
-                    Success.sendSuccess(getLocAsString(WorldDef.LOCATION), p);
+                    sendSuccess(getLocAsString(cm.getSpawnLocation()), p);
                     break ;
                 }
             default:
-                Error.sendError("Usage: /spawn <null> : <set> : <get>", p);
+                sendError("Usage: /spawn <null> : <set> : <get>", p);
         }
         return true;
     }

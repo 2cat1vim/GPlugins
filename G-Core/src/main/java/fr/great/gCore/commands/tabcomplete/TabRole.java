@@ -1,6 +1,7 @@
 package fr.great.gCore.commands.tabcomplete;
 
 import fr.great.gCore.database.DataRole;
+import fr.great.gCore.di.Context;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,10 +17,7 @@ import java.util.List;
 
 public class TabRole implements TabCompleter {
 
-    private DataRole role;
-    public TabRole(DataRole role) {
-        this.role = role;
-    }
+    private final DataRole dr = Context.getInstance().getDataRole();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sdr, @NotNull Command cmd, @NotNull String lbl, @NotNull String @NotNull [] args) {
@@ -42,9 +40,9 @@ public class TabRole implements TabCompleter {
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
             List<String> roles = new ArrayList<>();
-            int size = role.getRoles().size();
+            int size = dr.getRoles().size();
             for (int i = 0; i < size; ++i) {
-                roles.add(role.getRoleByValue(i));
+                roles.add(dr.getRoleByValue(i));
             }
             return StringUtil.copyPartialMatches(args[2].toLowerCase(), roles, new ArrayList<>());
         }

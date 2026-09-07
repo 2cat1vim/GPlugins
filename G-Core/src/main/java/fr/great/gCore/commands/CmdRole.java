@@ -1,9 +1,8 @@
 package fr.great.gCore.commands;
 
+import fr.great.gCore.config.ConfigManager;
 import fr.great.gCore.database.DataRole;
-import fr.great.gCore.Utils.Definitions.BasicDef;
-import fr.great.gCore.Utils.Functions.Global.Error;
-import fr.great.gCore.Utils.Functions.Global.Success;
+import fr.great.gCore.di.Context;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,33 +12,31 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 
-public class CmdRole implements CommandExecutor {
-    private final DataRole role;
-    public CmdRole(DataRole role) {
-        this.role = role;
-    }
+import static fr.great.gCore.utils.Logger.*;
 
-    private final String usage = "Usage:\n* /role list\n* /role set <player> <role>\n* /role get <player>";
+public class CmdRole implements CommandExecutor {
+    private final DataRole dr = Context.getInstance().getDataRole();
+    private final ConfigManager cm = Context.getInstance().getConfigManager();
 
     public int getRoleAsync(Player p, Player t) {
         final int[] r = {0};
-        Bukkit.getScheduler().runTaskAsynchronously(BasicDef.PLUGIN, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(cm.getPlugin(), () -> {
             try {
-                r[0] = role.getRole(t);
+                r[0] = dr.getRole(t);
             } catch (SQLException e) {
-                Error.sendError("SQL Error", p);
+                sendError("SQL Error", p);
             }
         });
         return r[0];
     }
 
     public void updateRoleAsync(Player p, Player t, int r) {
-        Bukkit.getScheduler().runTaskAsynchronously(BasicDef.PLUGIN, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(cm.getPlugin(), () -> {
             try {
-                role.setRole(t, r);
-                role.setNameTagColor(t, role.getNameTagColor(t));
+                dr.setRole(t, r);
+                dr.setNameTagColor(t, dr.getNameTagColor(t));
             } catch (SQLException e) {
-                Error.sendError("SQL Error", p);
+                sendError("SQL Error", p);
             }
         });
     }
@@ -47,53 +44,54 @@ public class CmdRole implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sdr, @NotNull Command cmd, @NotNull String lbl, @NotNull String @NotNull [] args) {
         if (!(sdr instanceof Player)) {
-            fr.great.gCore.Utils.Functions.Global.Error.sendErrorServer("This command require to be a player");
+            sendErrorServer("This command require to be a player", cm.getPlugin());
             return true;
         }
+        final String usage = "Usage:\n* /role list\n* /role set <player> <role>\n* /role get <player>";
         Player p = (Player)sdr;
         if (args.length == 0) {
-            Error.sendError(usage, p);
+            sendError(usage, p);
             return true;
         }
         if (args.length == 1 && args[0].equals("list")) {
-            Success.sendSuccess(String.join(" : ", BasicDef.ROLES), p);
+            sendSuccess(String.join(" : ", cm.getPlayerRoles()), p);
             return true;
         }
         Player t = Bukkit.getPlayer(args[1]);
         if (t == null) {
-            Error.sendError(args[1] + " is offline", p);
+            sendError(args[1] + " is offline", p);
             return true;
         }
         switch (args.length) {
             case 2:
                 if (args[0].equals("get")) {
                     if (!p.hasPermission("gcore.role.get")) {
-                        Error.sendError("You do not have the permission", p);
+                        sendError("You do not have the permission", p);
                         break;
                     }
                     int r = getRoleAsync(p, t);
-                    Success.sendSuccess(p.getName() + " have role: " + role.getRoleByValue(r), p);
+                    sendSuccess(p.getName() + " have role: " + dr.getRoleByValue(r), p);
                 }
                 else {
-                    Error.sendError(usage, p);
+                    sendError(usage, p);
                 }
                 break;
             case 3:
                 if (args[0].equals("set")) {
                     if (!p.hasPermission("gcore.role.set")) {
-                        Error.sendError("You do not have the permission", p);
+                        sendError("You do not have the permission", p);
                         break;
                     }
-                    int r = role.getValueByRole(args[2]);
+                    int r = dr.getValueByRole(args[2]);
                     updateRoleAsync(p, t, r);
-                    Success.sendSuccess(t.getName() + " role is set to: " + role.getRoleByValue(r), p);
+                    sendSuccess(t.getName() + " role is set to: " + dr.getRoleByValue(r), p);
                 }
                 else {
-                    Error.sendError(usage, p);
+                    sendError(usage, p);
                 }
                 break;
             default:
-                Error.sendError(usage, p);
+                sendError(usage, p);
                 break;
         }
         return true;

@@ -1,8 +1,9 @@
 package fr.great.gCore.events;
+import fr.great.gCore.config.ConfigManager;
 import fr.great.gCore.database.DataManager;
 import fr.great.gCore.database.DataRole;
-import fr.great.gCore.Utils.Definitions.WorldDef;
-import fr.great.gCore.Utils.Functions.Global.Delay;
+import fr.great.gCore.di.Context;
+import fr.great.gCore.utils.Delay;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -12,26 +13,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import fr.great.gCore.Utils.Definitions.BasicDef;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.SQLException;
 
 public class EventLog implements Listener {
-    private final DataManager manager;
-    private final DataRole role;
-
-    public EventLog(DataManager manager, DataRole role) {
-        this.manager = manager;
-        this.role = role;
-    }
+    private final DataManager dm = Context.getInstance().getDataManager();
+    private final DataRole dr = Context.getInstance().getDataRole();
+    private final ConfigManager cm = Context.getInstance().getConfigManager();
 
     public void addPlayerToSQL(Player p) {
-        Bukkit.getScheduler().runTaskAsynchronously(BasicDef.PLUGIN, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(cm.getPlugin(), () -> {
             try {
-                manager.addPlayer(p);
-                ChatColor color = role.getNameTagColor(p);
-                role.setNameTagColor(p, color);
+                dm.addPlayer(p);
+                ChatColor color = dr.getNameTagColor(p);
+                dr.setNameTagColor(p, color);
             } catch (SQLException e) {
                 p.sendMessage("SQL Error, contact staff -> Log[addPlayerToSQL]");
             }
@@ -40,14 +36,13 @@ public class EventLog implements Listener {
 
     public void spawnPlayer(Player p) {
         p.setGameMode(GameMode.ADVENTURE);
-        p.teleport(WorldDef.LOCATION);
+        p.teleport(cm.getSpawnLocation());
         p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
         p.setFoodLevel((int)p.getAttribute(Attribute.MAX_HEALTH).getValue());
         Delay.Set(() ->
                 p.playSound(p.getLocation(), Sound.ITEM_GOAT_HORN_SOUND_0, 1.0f, 1.5f)
         ,20L);
-
-        Bukkit.getServer().sendPlainMessage(BasicDef.MSGWELCOME.replace("<player>", p.getName()));
+        Bukkit.getServer().sendPlainMessage(cm.getWelcomeMessage().replace("<player>", p.getName()));
     }
 
     @EventHandler

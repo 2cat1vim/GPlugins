@@ -1,5 +1,6 @@
 # POSITIONS
 spawnPosition:
+  world: "World"
   x: 0.0
   y: 60.0
   z: 0.0
@@ -35,3 +36,6 @@ playerRoles:
   - "Moderator"
   - "Admin"
   - "Owner"
+  # SPECIAL START: <player> & <rank_color>
+generalChatFormat: "<rank_color><player>§7: §f"
+  # SPECIAL END

@@ -1,7 +1,6 @@
 package fr.great.gCore.database;
 
 import org.bukkit.entity.Player;
-
 import java.sql.*;
 
 public class DataManager {

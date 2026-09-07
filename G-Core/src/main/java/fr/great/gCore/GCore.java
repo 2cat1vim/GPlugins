@@ -1,7 +1,6 @@
 package fr.great.gCore;
 
-import fr.great.gCore.Utils.Functions.Global.Error;
-import fr.great.gCore.Utils.Functions.Global.Success;
+import fr.great.gCore.di.Context;
 import fr.great.gCore.commands.CmdKick;
 import fr.great.gCore.commands.CmdRole;
 import fr.great.gCore.commands.tabcomplete.TabKick;
@@ -15,17 +14,15 @@ import fr.great.gCore.events.EventChat;
 import fr.great.gCore.events.EventDeath;
 import fr.great.gCore.events.EventLog;
 import fr.great.gCore.events.EventState;
-import fr.great.gCore.Utils.Definitions.WorldDef;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 
-import static fr.great.gCore.Utils.Functions.Global.Success.sendSuccessServer;
+import static fr.great.gCore.utils.Logger.*;
 import static org.bukkit.GameRules.*;
 
 public final class GCore extends JavaPlugin {
-
     private DataManager dataManager;
     private DataRole dataRole;
     private ConfigManager configManager;
@@ -34,24 +31,24 @@ public final class GCore extends JavaPlugin {
     @Override
     public void onEnable() {
         this.createDatabaseOrDefault();
-        configManager = new ConfigManager(this);
         this.regEvents();
         this.regCommands();
         setEnvironmentSettings();
-        Success.sendSuccessServer("GCore is started", this);
+        Context.getInstance().createContext(dataManager, dataRole, configManager);
+        sendSuccessServer("GCore is started", this);
     }
 
     /* Main off */
     @Override
     public void onDisable() {
         closeDatabase();
-        Success.sendSuccessServer("GCore is disabled", this);
+        sendSuccessServer("GCore is disabled", this);
     }
 
     /* Rest is helper for main on & off */
     private void regEvents() {
-        getServer().getPluginManager().registerEvents(new EventLog(dataManager, dataRole), this);
-        getServer().getPluginManager().registerEvents(new EventChat(dataRole), this);
+        getServer().getPluginManager().registerEvents(new EventLog(), this);
+        getServer().getPluginManager().registerEvents(new EventChat(), this);
         getServer().getPluginManager().registerEvents(new EventState(), this);
         getServer().getPluginManager().registerEvents(new EventDeath(), this);
     }
@@ -59,14 +56,14 @@ public final class GCore extends JavaPlugin {
     private void regCommands() {
         this.getCommand("spawn").setExecutor(new CmdSpawn());
         this.getCommand("spawn").setTabCompleter(new TabSpawn());
-        this.getCommand("role").setExecutor(new CmdRole(dataRole));
-        this.getCommand("role").setTabCompleter(new TabRole(dataRole));
+        this.getCommand("role").setExecutor(new CmdRole());
+        this.getCommand("role").setTabCompleter(new TabRole());
         this.getCommand("gkick").setExecutor(new CmdKick());
         this.getCommand("gkick").setTabCompleter(new TabKick());
     }
 
     private void setEnvironmentSettings() {
-        World world = WorldDef.WORLD;
+        World world = configManager.getSpawnLocation().getWorld();
         System.out.println(world.toString());
         world.setDifficulty(Difficulty.HARD);
         for (GameRule<?> rule : Registry.GAME_RULE) {
@@ -87,11 +84,12 @@ public final class GCore extends JavaPlugin {
             dataManager = new DataManager(
                     getDataFolder().getAbsolutePath() + "/database.db"
             );
-            dataRole = new DataRole(dataManager);
+            dataRole = new DataRole();
         } catch (SQLException e) {
-            Error.sendErrorServer("Failed to create or load database", this);
+            sendErrorServer("Failed to create or load database", this);
             Bukkit.getPluginManager().disablePlugin(this);
         }
+        configManager = new ConfigManager(this);
     }
 
     private void closeDatabase() {
@@ -101,7 +99,7 @@ public final class GCore extends JavaPlugin {
             }
         }
         catch (SQLException e) {
-            Error.sendErrorServer("Failed to close database", this);
+            sendErrorServer("Failed to close database", this);
         }
     }
 }
