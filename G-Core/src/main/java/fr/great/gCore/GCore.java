@@ -1,14 +1,12 @@
 package fr.great.gCore;
 
+import fr.great.gCore.commands.*;
+import fr.great.gCore.commands.tabcomplete.*;
+import fr.great.gCore.database.DataBan;
+import fr.great.gCore.database.DataMute;
 import fr.great.gCore.di.Context;
-import fr.great.gCore.commands.CmdKick;
-import fr.great.gCore.commands.CmdRole;
-import fr.great.gCore.commands.tabcomplete.TabKick;
-import fr.great.gCore.commands.tabcomplete.TabRole;
 import fr.great.gCore.config.ConfigManager;
 import fr.great.gCore.database.DataManager;
-import fr.great.gCore.commands.CmdSpawn;
-import fr.great.gCore.commands.tabcomplete.TabSpawn;
 import fr.great.gCore.database.DataRole;
 import fr.great.gCore.events.EventChat;
 import fr.great.gCore.events.EventDeath;
@@ -30,6 +28,8 @@ public final class GCore extends JavaPlugin {
     private DataManager dataManager;
     private DataRole dataRole;
     private ConfigManager configManager;
+    private DataMute dataMute;
+    private DataBan dataBan;
 
     /* Main on */
     @Override
@@ -66,6 +66,11 @@ public final class GCore extends JavaPlugin {
         this.getCommand("role").setTabCompleter(new TabRole());
         this.getCommand("gkick").setExecutor(new CmdKick());
         this.getCommand("gkick").setTabCompleter(new TabKick());
+        this.getCommand("gkick").setExecutor(new CmdKick());
+        this.getCommand("gmute").setExecutor(new CmdMute());
+        this.getCommand("gmute").setTabCompleter(new TabMute());
+        this.getCommand("gunmute").setExecutor(new CmdUnmute());
+        this.getCommand("gunmute").setTabCompleter(new TabUnmute());
     }
 
     private void setEnvironmentSettings() {
@@ -96,6 +101,10 @@ public final class GCore extends JavaPlugin {
             Context.getInstance().createDataManager(dataManager);
             dataRole = new DataRole();
             Context.getInstance().createDataRole(dataRole);
+            dataMute = new DataMute();
+            Context.getInstance().createDataMute(dataMute);
+            dataBan = new DataBan();
+            Context.getInstance().createDataBan(dataBan);
             return true;
         } catch (SQLException e) {
             sendErrorServer("Failed to create or load database", this);

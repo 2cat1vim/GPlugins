@@ -11,7 +11,11 @@ public class DataManager {
         try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS players (" +
                     "uuid TEXT PRIMARY KEY, " +
-                    "role INT NOT NULL DEFAULT 0)");
+                    "role INT NOT NULL DEFAULT 0" +
+                    "mute_date LONG NOT NULL DEFAULT 0" +
+                    "mute_time LONG NOT NULL DEFAULT 0" +
+                    "ban_date LONG NOT NULL DEFAULT 0" +
+                    "ban_time LONG NOT NULL DEFAULT 0)");
         }
     }
 

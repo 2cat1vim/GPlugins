@@ -12,3 +12,7 @@ commands:
     description: Role related command
   gkick:
     description: Kick related command
+  gmute:
+    description: Mute related command
+  gunmute:
+    description: Unmute related command
