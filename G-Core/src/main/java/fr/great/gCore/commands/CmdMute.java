@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Date;
 
 import static fr.great.gCore.utils.Logger.sendError;
 import static fr.great.gCore.utils.Logger.sendErrorServer;
@@ -26,16 +28,25 @@ public class CmdMute implements CommandExecutor {
             return -1;
         }
         long value = 0;
-        int last = 0;
-        for (int i = 0; i < time.length(); ++i) {
+        int last = -1;
+        for (int i = 0; i < time.length(); i++) {
             if (!isDigit(time.charAt(i))) {
-                value = Long.parseLong(time.substring(i));
-                last = i + 1;
+                String sub = time.substring(0, i);
+                if (sub.length() > 7) {
+                    return parseError;
+                }
+                try {
+                    value = Long.parseLong(sub);
+                }
+                catch (NumberFormatException e) {
+                    return parseError;
+                }
+                last = i;
                 break;
             }
         }
-        if (time.length() <= (last - 1)) {
-            return parseError;
+        if (last == -1) {
+            return (parseError);
         }
         switch (time.charAt(last)) {
             case 'h':
@@ -57,15 +68,20 @@ public class CmdMute implements CommandExecutor {
                              @NotNull String @NotNull [] args) {
         if (!(sdr instanceof Player)) {
             sendErrorServer("This command require to be a player", cm.getPlugin());
+            return true;
         }
         Player p = (Player)sdr;
-        if (args.length != 3) {
+        if (args.length < 3) {
             sendError("Usage: /mute <player> <time> <reason>", p);
             return true;
         }
         Player t = Bukkit.getPlayer(args[0]);
         if (t == null) {
             sendError(args[0] + " is offline", p);
+            return true;
+        }
+        if (!p.hasPermission("gcore.moderation.mute")) {
+            sendError("You do not have the permission", p);
             return true;
         }
         long time = parseTime(args[1]);
@@ -76,10 +92,15 @@ public class CmdMute implements CommandExecutor {
         try {
             dm.setMute(t, time);
         } catch (SQLException e) {
-            sendError("SQL Error, contact dev", p);
+            sendError("SQL Error, contact dev [" + e.getMessage() + "]", p);
             return true;
         }
-        Bukkit.getServer().sendPlainMessage(t.getName() + " is muted for: " + time);
+        Date date = new Date(System.currentTimeMillis() + time);
+        String msg = cm.getBroadcastMuteMessage();
+        msg = msg.replace("<player>", t.getName());
+        msg = msg.replace("<time>", time == -1 ? "Sun Explode" : date.toLocaleString());
+        msg = msg.replace("<reason>", String.join(", ", Arrays.copyOfRange(args, 2, args.length)));
+        Bukkit.getServer().sendPlainMessage(msg);
         return true;
     }
 }

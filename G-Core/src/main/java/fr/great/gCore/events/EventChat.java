@@ -69,7 +69,7 @@ public class EventChat implements Listener {
             try {
                 sendMessageForEachRole(p, msg);
             } catch (SQLException ex) {
-                sendError("SQL Error", p);
+                sendError("SQL Error, contact dev", p);
                 return ;
             }
             return ;

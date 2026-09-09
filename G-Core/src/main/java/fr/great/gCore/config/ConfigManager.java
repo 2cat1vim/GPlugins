@@ -18,6 +18,7 @@ public class ConfigManager {
     private String deathSubTitle;
     private String kickMessage;
     private String broadcastKickMessage;
+    private String broadcastMuteMessage;
     private String generalChatFormat;
     private String playerNameTag;
     private List<String> playerRoles;
@@ -83,6 +84,7 @@ public class ConfigManager {
         deathSubTitle = getStringOrDefault(file, "deathSubTitleMessage", "§7be careful next time");
         kickMessage = getStringOrDefault(file, "kickMessage", "§cYou have been kicked");
         broadcastKickMessage = getStringOrDefault(file, "broadcastKickMessage", "§7<player> §chave been kicked for <reason>");
+        broadcastMuteMessage = getStringOrDefault(file, "broadcastMuteMessage", "§7<player> &chave been muted for <time>, '<reason>'");
         generalChatFormat = getStringOrDefault(file, "generalChatFormat", "§f[<rank_color><rank>§f] <rank_color><player>§f: §f");
         playerNameTag = getStringOrDefault(file, "playerNameTag", "§f[<rank_color><rank>§f] <rank_color>");
         playerRoles = getStringListOrDefault(file, "playerRoles", List.of("New", "Player", "Vip", "Helper", "Moderator", "Admin", "Owner"));
@@ -98,6 +100,7 @@ public class ConfigManager {
     public String getDeathSubTitle() { return deathSubTitle; }
     public String getKickMessage() { return kickMessage; }
     public String getBroadcastKickMessage() { return broadcastKickMessage; }
+    public String getBroadcastMuteMessage() { return broadcastMuteMessage; }
     public String getGeneralChatFormat() { return generalChatFormat; }
     public String getPlayerNameTag() { return playerNameTag; }
     public List<String> getPlayerRoles() { return playerRoles; }

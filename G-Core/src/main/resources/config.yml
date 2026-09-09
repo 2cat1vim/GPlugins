@@ -1,4 +1,6 @@
-# POSITIONS
+# CONFIG GCORE v1.0
+
+# POSITION SECTION
 spawnPosition:
   world: "World"
   x: 0.0
@@ -6,24 +8,33 @@ spawnPosition:
   z: 0.0
   yaw: 0.0
   pitch: 0.0
-# MESSAGES
+
+# MESSAGE SECTION
 prefixMessage: "§7[§bGCore§7]: §f"
-  # SPECIAL START: <player>
+broadcastPrefixMessage: "§7[§bBroadcast§7]: §f"
+# welcomeMessage
+# You can use <player> to get the Player name.
 welcomeMessage: "§aGreat to see you §7<player> §ahave fun!"
-  # SPECIAL END
 deathTitleMessage: "§cYou died"
 deathSubTitleMessage: "§7be careful next time"
-# MODERATION MESSAGES
-  # SPECIAL START: <player> & <reason>
+# broadcastKickMessage
+# You can use <player> to get the Player name.
+# You can use <reason> to get the specified reason.
 broadcastKickMessage: "§7<player> §chave been kicked for <reason>"
-  # SPECIAL END
 kickMessage: "§cYou have been kicked"
-# CHAT FILTER
+# muteBroadcastMessage
+# You can use <player> to get the Player name.
+# You can use <time> to get the time mute left.
+# You can use <reason> to get the specified reason.
+broadcastMuteMessage: "§7<player> §cis now mute until §f<time>§c for §f'<reason>'§c"
+
+# CHAT FILTER SECTION
 messageFilter:
   - "fuck"
   - "bitch"
   - "puta"
-# ROLES
+
+# ROLES SECTION
 playerRoles:
   - "New"
   - "Player"
@@ -32,9 +43,17 @@ playerRoles:
   - "Moderator"
   - "Admin"
   - "Owner"
-  # SPECIAL START: <player> & <rank> & <rank_color>
+# playerNameTag
+# You can use <player> to get the Player name.
+# You can use <rank> to get the role of the Player.
+# You can use <rank_color> to get the assigned role color of the Player.
 playerNameTag: "§f[<rank_color><rank>§f] <rank_color>"
-  # SPECIAL END
-  # SPECIAL START: <player> & <rank> & <rank_color> ([!] rank color can only be set one time)
+# generalChatFormat
+# You can use <player> to get the Player name.
+# You can use <rank> to get the role of the Player.
+# You can use <rank_color> to get the assigned role color of the Player.
 generalChatFormat: "§f[<rank_color><rank>§f] <player>§f: §f"
-  # SPECIAL END
+
+# ----------------------
+# | Discord: vezzondsc | :)
+# ----------------------
