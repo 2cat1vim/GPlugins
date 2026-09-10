@@ -1,10 +1,9 @@
 package fr.great.gCore.events;
 
 import fr.great.gCore.config.ConfigManager;
-import fr.great.gCore.database.DataMute;
+import fr.great.gCore.database.DataRestriction;
 import fr.great.gCore.database.DataRole;
 import fr.great.gCore.di.Context;
-import fr.great.gCore.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -20,7 +19,7 @@ import static fr.great.gCore.utils.Logger.sendError;
 public class EventChat implements Listener {
     private final DataRole dr = Context.getInstance().getDataRole();
     private final ConfigManager cm = Context.getInstance().getConfigManager();
-    private final DataMute dm = Context.getInstance().getDataMute();
+    private final DataRestriction dm = Context.getInstance().getDataMute();
 
     public boolean chatFilter(String msg) {
         List<String> list = cm.getMessageFilter();
@@ -56,7 +55,7 @@ public class EventChat implements Listener {
         e.setCancelled(true);
         Player p = e.getPlayer();
         try {
-            if (dm.isMute(p)) {
+            if (dm.isRestrict(p, "mute")) {
                 sendError("You are muted", p);
                 return ;
             }

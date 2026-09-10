@@ -16,3 +16,5 @@ commands:
     description: Mute related command
   gunmute:
     description: Unmute related command
+  worldsettings:
+    description: Settings related command

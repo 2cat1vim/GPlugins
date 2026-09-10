@@ -2,24 +2,17 @@ package fr.great.gCore;
 
 import fr.great.gCore.commands.*;
 import fr.great.gCore.commands.tabcomplete.*;
-import fr.great.gCore.database.DataBan;
-import fr.great.gCore.database.DataMute;
+import fr.great.gCore.database.DataInventory;
+import fr.great.gCore.database.DataRestriction;
 import fr.great.gCore.di.Context;
 import fr.great.gCore.config.ConfigManager;
 import fr.great.gCore.database.DataManager;
 import fr.great.gCore.database.DataRole;
-import fr.great.gCore.events.EventChat;
-import fr.great.gCore.events.EventDeath;
-import fr.great.gCore.events.EventLog;
-import fr.great.gCore.events.EventState;
+import fr.great.gCore.events.*;
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Set;
 
 import static fr.great.gCore.utils.Logger.*;
 import static org.bukkit.GameRules.*;
@@ -28,8 +21,8 @@ public final class GCore extends JavaPlugin {
     private DataManager dataManager;
     private DataRole dataRole;
     private ConfigManager configManager;
-    private DataMute dataMute;
-    private DataBan dataBan;
+    private DataRestriction dataRestriction;
+    private DataInventory dataInventory;
 
     /* Main on */
     @Override
@@ -57,6 +50,7 @@ public final class GCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventChat(), this);
         getServer().getPluginManager().registerEvents(new EventState(), this);
         getServer().getPluginManager().registerEvents(new EventDeath(), this);
+        getServer().getPluginManager().registerEvents(new EventInventory(), this);
     }
 
     private void regCommands() {
@@ -71,6 +65,7 @@ public final class GCore extends JavaPlugin {
         this.getCommand("gmute").setTabCompleter(new TabMute());
         this.getCommand("gunmute").setExecutor(new CmdUnmute());
         this.getCommand("gunmute").setTabCompleter(new TabUnmute());
+        this.getCommand("worldsettings").setExecutor(new CmdWorldSettings());
     }
 
     private void setEnvironmentSettings() {
@@ -101,10 +96,10 @@ public final class GCore extends JavaPlugin {
             Context.getInstance().createDataManager(dataManager);
             dataRole = new DataRole();
             Context.getInstance().createDataRole(dataRole);
-            dataMute = new DataMute();
-            Context.getInstance().createDataMute(dataMute);
-            dataBan = new DataBan();
-            Context.getInstance().createDataBan(dataBan);
+            dataRestriction = new DataRestriction();
+            Context.getInstance().createDataMute(dataRestriction);
+            dataInventory = new DataInventory();
+            Context.getInstance().createDataInventory(dataInventory);
             return true;
         } catch (SQLException e) {
             sendErrorServer("Failed to create or load database", this);

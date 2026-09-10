@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 import static fr.great.gCore.utils.Logger.*;
 
 public class CmdKick implements CommandExecutor {
@@ -19,7 +21,7 @@ public class CmdKick implements CommandExecutor {
         String newMsg;
         newMsg = msg.replace("<player>", pName);
         newMsg = newMsg.replace("<reason>", reason);
-        return newMsg;
+        return (cm.getBroadcastPrefixMessage() + newMsg);
     }
 
     @Override
@@ -33,7 +35,7 @@ public class CmdKick implements CommandExecutor {
             sendError("You do not have the permission", p);
             return true;
         }
-        if (args.length != 2) {
+        if (args.length < 2) {
             sendError("Usage:\n*/kick <player> <reason>", p);
             return true;
         }
@@ -42,7 +44,9 @@ public class CmdKick implements CommandExecutor {
             sendError(args[0] + " is offline", p);
             return true;
         }
-        t.kick(Component.text(cm.getKickMessage() + "\nReason:\n" + args[1]));
+
+        t.kick(Component.text(cm.getKickMessage() + "\nReason:\n" +
+                String.join(", ", Arrays.copyOfRange(args, 1, args.length))));
         Bukkit.getServer().sendPlainMessage(filterConfigKickMessage(cm.getBroadcastKickMessage(), args[0], args[1]));
         return true;
     }

@@ -1,7 +1,7 @@
 package fr.great.gCore.commands;
 
 import fr.great.gCore.config.ConfigManager;
-import fr.great.gCore.database.DataMute;
+import fr.great.gCore.database.DataRestriction;
 import fr.great.gCore.di.Context;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,7 +17,7 @@ import static fr.great.gCore.utils.Logger.*;
 public class CmdUnmute implements CommandExecutor {
 
     private final ConfigManager cm = Context.getInstance().getConfigManager();
-    private final DataMute dm = Context.getInstance().getDataMute();
+    private final DataRestriction dr = Context.getInstance().getDataMute();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sdr,
@@ -43,8 +43,8 @@ public class CmdUnmute implements CommandExecutor {
             return true;
         }
         try {
-            if (dm.isMute(t)) {
-                dm.setMute(t, 0);
+            if (dr.isRestrict(t, "mute")) {
+                dr.setRestriction(t, "mute", 0);
                 sendSuccess(t.getName() + " is now unmuted", p);
             }
             else {

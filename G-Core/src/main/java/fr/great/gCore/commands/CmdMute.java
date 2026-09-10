@@ -1,9 +1,8 @@
 package fr.great.gCore.commands;
 
 import fr.great.gCore.config.ConfigManager;
-import fr.great.gCore.database.DataMute;
+import fr.great.gCore.database.DataRestriction;
 import fr.great.gCore.di.Context;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,9 +19,11 @@ import static fr.great.gCore.utils.Logger.sendErrorServer;
 import static java.lang.Character.isDigit;
 
 public class CmdMute implements CommandExecutor {
+
     private final ConfigManager cm = Context.getInstance().getConfigManager();
-    private final DataMute dm = Context.getInstance().getDataMute();
+    private final DataRestriction dr = Context.getInstance().getDataMute();
     private final long parseError = -2;
+
     public long parseTime(String time) {
         if (time.equals("!")) {
             return -1;
@@ -90,7 +91,7 @@ public class CmdMute implements CommandExecutor {
             return true;
         }
         try {
-            dm.setMute(t, time);
+            dr.setRestriction(t, "mute", time);
         } catch (SQLException e) {
             sendError("SQL Error, contact dev [" + e.getMessage() + "]", p);
             return true;
@@ -100,7 +101,7 @@ public class CmdMute implements CommandExecutor {
         msg = msg.replace("<player>", t.getName());
         msg = msg.replace("<time>", time == -1 ? "Sun Explode" : date.toLocaleString());
         msg = msg.replace("<reason>", String.join(", ", Arrays.copyOfRange(args, 2, args.length)));
-        Bukkit.getServer().sendPlainMessage(msg);
+        Bukkit.getServer().sendPlainMessage(cm.getBroadcastPrefixMessage() + msg);
         return true;
     }
 }

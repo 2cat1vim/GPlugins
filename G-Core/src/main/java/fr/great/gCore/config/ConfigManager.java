@@ -13,6 +13,7 @@ public class ConfigManager {
 
     private final JavaPlugin plugin;
     private String prefixMessage;
+    private String broadcastPrefixMessage;
     private String welcomeMessage;
     private String deathTitle;
     private String deathSubTitle;
@@ -73,12 +74,14 @@ public class ConfigManager {
         file.set("spawnPosition.z", loc.getZ());
         file.set("spawnPosition.yaw", loc.getYaw());
         file.set("spawnPosition.pitch", loc.getPitch());
-        file.set("spawnPosition.world", loc.getWorld());
+        file.set("spawnPosition.world", loc.getWorld().getName());
+        this.spawnLocation = getLocationOrDefault(file);
         plugin.saveConfig();
     }
 
     public void loadConfigList(FileConfiguration file) {
         prefixMessage = getStringOrDefault(file, "prefixMessage", "§7[§bGCore§7]: §f");
+        broadcastPrefixMessage = getStringOrDefault(file, "broadcastPrefixMessage", "§7[§bBroadcast§7]: §f");
         welcomeMessage = getStringOrDefault(file, "welcomeMessage", "§aGreat to see you §7<player> §ahave fun!");
         deathTitle = getStringOrDefault(file, "deathTitleMessage", "§cYou died");
         deathSubTitle = getStringOrDefault(file, "deathSubTitleMessage", "§7be careful next time");
@@ -89,12 +92,12 @@ public class ConfigManager {
         playerNameTag = getStringOrDefault(file, "playerNameTag", "§f[<rank_color><rank>§f] <rank_color>");
         playerRoles = getStringListOrDefault(file, "playerRoles", List.of("New", "Player", "Vip", "Helper", "Moderator", "Admin", "Owner"));
         messageFilter = getStringListOrDefault(file, "messageFilter", List.of("fuck", "bitch", "puta"));
-
         spawnLocation = getLocationOrDefault(file);
     }
 
     public JavaPlugin getPlugin() { return plugin; }
     public String getPrefixMessage() { return prefixMessage; }
+    public String getBroadcastPrefixMessage() { return broadcastPrefixMessage; }
     public String getWelcomeMessage() { return welcomeMessage; }
     public String getDeathTitle() { return deathTitle; }
     public String getDeathSubTitle() { return deathSubTitle; }

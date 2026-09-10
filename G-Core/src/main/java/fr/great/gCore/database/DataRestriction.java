@@ -7,12 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DataMute {
+public class DataRestriction {
     private final DataManager dm = Context.getInstance().getDataManager();
 
-    public void setMute(Player p, long muteTime) throws SQLException {
+    public void setRestriction(Player p, String flag, long muteTime) throws SQLException {
         try (PreparedStatement preparedStatement = dm.getConnection().prepareStatement
-                ("UPDATE players SET mute_time = ?, mute_date = ? WHERE uuid = ?")
+                ("UPDATE players SET " + flag + "_time = ?, " + flag + "_date = ? WHERE uuid = ?")
         ) {
             long muteDate = System.currentTimeMillis();
             preparedStatement.setLong(1, muteTime);
@@ -22,28 +22,29 @@ public class DataMute {
         }
     }
 
-    public long getMuteTime(Player p) throws SQLException {
+    // flag = mute or ban
+    public long getRestrictionTime(Player p, String flag) throws SQLException {
         try (PreparedStatement preparedStatement = dm.getConnection().prepareStatement
-                ("SELECT mute_time FROM players WHERE uuid = ?")
+                ("SELECT " + flag + "_time" + " FROM players WHERE uuid = ?")
         ) {
             preparedStatement.setString(1, p.getUniqueId().toString());
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getLong("mute_time");
+                    return rs.getLong(flag + "_time");
                 }
                 return 0;
             }
         }
     }
 
-    public long getMuteDate(Player p) throws SQLException {
+    public long getRestrictionDate(Player p, String flag) throws SQLException {
         try (PreparedStatement preparedStatement = dm.getConnection().prepareStatement
-                ("SELECT mute_date FROM players WHERE uuid = ?")
+                ("SELECT " + flag + "_date" + " FROM players WHERE uuid = ?")
         ) {
             preparedStatement.setString(1, p.getUniqueId().toString());
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getLong("mute_date");
+                    return rs.getLong(flag + "_date");
                 }
                 return 0;
             }
@@ -52,13 +53,14 @@ public class DataMute {
 
     // True if player is mute
     // -1 if ban is permanent
-    public boolean isMute(Player p) throws SQLException {
-        long mute_time = getMuteTime(p);
-        if (mute_time == -1) {
+    public boolean isRestrict(Player p, String flag) throws SQLException {
+        long restrictionTime = getRestrictionTime(p, flag);
+        // Forever Restriction
+        if (restrictionTime == -1) {
             return true;
         }
-        long mute_date = getMuteDate(p);
-        long curr_date = System.currentTimeMillis();
-        return (curr_date < (mute_time + mute_date));
+        long restrictionDate = getRestrictionDate(p, flag);
+        long currentDate = System.currentTimeMillis();
+        return (currentDate < (restrictionTime + restrictionDate));
     }
 }

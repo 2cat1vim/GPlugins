@@ -1,19 +1,21 @@
 package fr.great.gCore.di;
 
 import fr.great.gCore.config.ConfigManager;
-import fr.great.gCore.database.DataBan;
+import fr.great.gCore.database.DataInventory;
 import fr.great.gCore.database.DataManager;
-import fr.great.gCore.database.DataMute;
+import fr.great.gCore.database.DataRestriction;
 import fr.great.gCore.database.DataRole;
+
+import javax.xml.crypto.Data;
 
 public class Context {
     private static final Context INSTANCE = new Context();
 
     private DataManager dataManager;
     private DataRole dataRole;
-    private DataMute dataMute;
-    private DataBan dataBan;
+    private DataRestriction dataMute;
     private ConfigManager configManager;
+    private DataInventory dataInventory;
 
     private Context() {}
 
@@ -27,19 +29,20 @@ public class Context {
     public void createDataRole(DataRole dataRole) {
         this.dataRole = dataRole;
     }
-    public void createDataMute(DataMute dataMute) {
+    public void createDataMute(DataRestriction dataMute) {
         this.dataMute = dataMute;
-    }
-    public void createDataBan(DataBan dataBan) {
-        this.dataBan = dataBan;
     }
     public void createConfigManager(ConfigManager configManager) {
         this.configManager = configManager;
     }
+    public void createDataInventory(DataInventory dataInventory) {
+        this.dataInventory = dataInventory;
+    }
 
     public DataManager getDataManager() { return this.dataManager; }
     public DataRole getDataRole() { return this.dataRole; }
-    public DataMute getDataMute() { return this.dataMute; }
-    public DataBan getDataBan() { return this.dataBan; }
+    public DataRestriction getDataMute() { return this.dataMute; }
     public ConfigManager getConfigManager() { return this.configManager; }
+    public DataInventory getDataInventory() { return this.dataInventory; }
+
 }
