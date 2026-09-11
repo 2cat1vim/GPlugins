@@ -2,7 +2,7 @@ package fr.great.gCore.events;
 
 import fr.great.gCore.database.DataInventory;
 import fr.great.gCore.di.Context;
-import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,47 +17,56 @@ public class EventInventory implements Listener {
 
     private DataInventory di = Context.getInstance().getDataInventory();
 
+    public String getKeyTitle(String title) {
+        int isValid = 0;
+        String keyTitle = "";
+        for (String key : di.getInventoryList().keySet()) {
+            if (title.contains(key)) {
+                keyTitle = key;
+                isValid = 1;
+            }
+        }
+        if (isValid == 0) {
+            return null;
+        }
+        return keyTitle;
+    }
+
     @EventHandler
     public void onBasicInventoryClick(InventoryClickEvent e) {
         Player p = (Player)e.getWhoClicked();
         Inventory inv = e.getClickedInventory();
         ClickType action = e.getClick();
-        String title = e.getView().getTitle(), keyTitle = "";
+        String title = e.getView().getTitle();
         ItemStack is = e.getCurrentItem();
+        int currentPage = 0;
+
         if (is == null)
             return ;
-        int current_page = 0, hasKey = 0;
-        for (String key : di.getInventoryList().keySet()) {
-            if (title.contains(key)) {
-                keyTitle = key;
-                hasKey = 1;
-            }
-        }
-        if (hasKey == 0) {
+
+        String keyTitle = getKeyTitle(title);
+        if (keyTitle == null) {
             return ;
         }
+
         try {
-            current_page = Integer.parseInt(title.substring((title.length() - 1)));
+            currentPage = Integer.parseInt(title.substring((title.length() - 1)));
         }
         catch (NumberFormatException ex) {
             sendError("NumberFormatException > Contact dev", p);
         }
+
         e.setCancelled(true);
+
         if (action.equals(ClickType.LEFT)) {
             if (di.getInventoryMaterials(keyTitle).contains(is.getType())) {
-                if (di.executeActionAndExit(keyTitle, is)) {
-                    p.closeInventory();
-                    return ;
-                }
-                p.openInventory(di.getGameruleInventory().get(current_page));
-                return ;
+                di.getBridgeInventory().executeActionAndExit(keyTitle, is, currentPage, p);
             }
             if (is.getItemMeta().getDisplayName().equals("§cPrevious Page")) {
-                p.openInventory(di.getGameruleInventory().get(current_page - 1));
+                di.getBridgeInventory().switchPage(keyTitle, currentPage - 1, p);
             }
             if (is.getItemMeta().getDisplayName().equals("§aNext Page")) {
-                p.openInventory(di.getGameruleInventory().get(current_page + 1));
-                sendSuccess("Previous: " + current_page + ", New: " + (current_page + 1), p);
+                di.getBridgeInventory().switchPage(keyTitle, currentPage + 1, p);
             }
         }
     }

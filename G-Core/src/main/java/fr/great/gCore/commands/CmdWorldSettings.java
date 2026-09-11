@@ -33,7 +33,8 @@ public class CmdWorldSettings implements CommandExecutor {
             sendError("Usage: /worldsettings", p);
             return true;
         }
-        p.openInventory(di.getGameruleInventory().getFirst());
+        p.openInventory(di.getBridgeInventory().getGameruleInventory(p).getFirst());
+        p.playSound(p.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
         return true;
     }
 }

@@ -18,3 +18,5 @@ commands:
     description: Unmute related command
   worldsettings:
     description: Settings related command
+  world:
+    description: World related command

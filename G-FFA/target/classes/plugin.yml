@@ -1,0 +1,12 @@
+name: G-FFA
+version: '1.0'
+
+main: fr.great.gFFA.GFFA
+api-version: '26.2'
+load: POSTWORLD
+
+depend: [G-Core]
+
+commands:
+  duel:
+    description: Duel related command

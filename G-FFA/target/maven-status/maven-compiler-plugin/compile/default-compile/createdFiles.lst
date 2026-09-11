@@ -1,0 +1,6 @@
+fr/great/gFFA/events/EventDuelDeath.class
+fr/great/gFFA/manager/ManagerDuel.class
+fr/great/gFFA/GFFA.class
+fr/great/gFFA/di/FFAContext.class
+fr/great/gFFA/commands/CmdDuel/CmdDuel.class
+fr/great/gFFA/manager/ManagerDuelRequest.class

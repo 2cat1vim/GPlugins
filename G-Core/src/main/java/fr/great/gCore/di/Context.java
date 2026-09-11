@@ -8,7 +8,7 @@ import fr.great.gCore.database.DataRole;
 
 import javax.xml.crypto.Data;
 
-public class Context {
+public class Context implements API.CoreDi {
     private static final Context INSTANCE = new Context();
 
     private DataManager dataManager;
@@ -22,6 +22,7 @@ public class Context {
     public static Context getInstance() {
         return INSTANCE;
     }
+
 
     public void createDataManager(DataManager dataManager) {
         this.dataManager = dataManager;
@@ -45,4 +46,28 @@ public class Context {
     public ConfigManager getConfigManager() { return this.configManager; }
     public DataInventory getDataInventory() { return this.dataInventory; }
 
+    @Override
+    public DataManager dataManager() {
+        return getDataManager();
+    }
+
+    @Override
+    public DataRole dataRole() {
+        return getDataRole();
+    }
+
+    @Override
+    public DataRestriction dataMute() {
+        return getDataMute();
+    }
+
+    @Override
+    public ConfigManager configManager() {
+        return getConfigManager();
+    }
+
+    @Override
+    public DataInventory dataInventory() {
+        return getDataInventory();
+    }
 }

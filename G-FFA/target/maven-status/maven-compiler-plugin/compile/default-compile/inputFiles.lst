@@ -1,0 +1,6 @@
+/home/ltrillar/IdeaProjects/GPlugins/G-FFA/src/main/java/fr/great/gFFA/GFFA.java
+/home/ltrillar/IdeaProjects/GPlugins/G-FFA/src/main/java/fr/great/gFFA/commands/CmdDuel/CmdDuel.java
+/home/ltrillar/IdeaProjects/GPlugins/G-FFA/src/main/java/fr/great/gFFA/di/FFAContext.java
+/home/ltrillar/IdeaProjects/GPlugins/G-FFA/src/main/java/fr/great/gFFA/events/EventDuelDeath.java
+/home/ltrillar/IdeaProjects/GPlugins/G-FFA/src/main/java/fr/great/gFFA/manager/ManagerDuel.java
+/home/ltrillar/IdeaProjects/GPlugins/G-FFA/src/main/java/fr/great/gFFA/manager/ManagerDuelRequest.java

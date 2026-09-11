@@ -66,6 +66,7 @@ public final class GCore extends JavaPlugin {
         this.getCommand("gunmute").setExecutor(new CmdUnmute());
         this.getCommand("gunmute").setTabCompleter(new TabUnmute());
         this.getCommand("worldsettings").setExecutor(new CmdWorldSettings());
+        this.getCommand("world").setExecutor(new CmdWorld());
     }
 
     private void setEnvironmentSettings() {
